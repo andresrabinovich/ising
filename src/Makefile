@@ -30,7 +30,7 @@ all: objects executable
 	$(CC) $(CFLAGS) -c $^ -o $@
 
 %.e: $(OBJECTS_C)
-	$(LD) $^ -o $@
+	$(LD) $^ -o $@ -lm
 
 clean:
 	rm -rfv $(OBJECTS_C) $(EXECUTABLE)
