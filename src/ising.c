@@ -11,7 +11,7 @@
 int main(int argc, char **argv) {
 	
 	//Configuraciones
-	int n = 4;
+	int n = 256;
 	float prob = 0.5;
 	float T = 2.0;
 	int niter = 50;
@@ -25,17 +25,21 @@ int main(int argc, char **argv) {
     energias[4] = exp(8/T);
     
 	//Comienza el programa
+	int i;
+	FILE *f = fopen("energias.txt", "w");
 	int *lattice = malloc(n * n * sizeof(int));
 	srand(time(NULL));
 	fill_lattice(lattice, n, prob);
-	printf("%f\n", delta_energia(lattice, n, 5, T, energias));
-	for (int i = 0; i < n; i++) {
-		for(int j = 0; j < n; j++){
-		//metropolis(lattice, n, T);
-		//energia += delta_energia(lattice, n, (i*n+j), T);
-		}
+	float energia = energia_total(lattice, n);
+	//printf("%f\n", energia);
+	//print_lattice(lattice, n);
+	for(i = 0; i < 100000; i++){
+		energia = metropolis(lattice, n, energias, energia);	
+		//printf("%f\n", energia);
+		//print_lattice(lattice, n);
+		fprintf(f, "%f\n", energia);
 	}
-	print_lattice(lattice, n);
+	fclose(f);
 	free(lattice);
 	return 0;
 }

@@ -1,7 +1,8 @@
 #ifndef METROPOLIS_H
 #define METROPOLIS_H
-int metropolis(int *lattice, int n, float T);
+float metropolis(int *lattice, int n, float *energias, float energia);
 int pick_site(int *lattice, int n);
-int flip(int *lattice, int n, float T);
-float delta_energia(int *lattice, int n, int sitio, float T, float *energias);
+float flip(int *lattice, int n, float *energias, float energia);
+float delta_energia(int *lattice, int n, int sitio);
+float energia_total(int *lattice, int n);
 #endif
