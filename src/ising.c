@@ -13,33 +13,48 @@ int main(int argc, char **argv) {
 	//Configuraciones
 	int n = 256;
 	float prob = 0.5;
-	float T = 2.0;
-	int niter = 50;
+	float T = 100;
+	float J = 1;
+	float B = 0;
+	int pasos = 100000;
 	
     //Calculamos las energías
-    float energias[5];
-    energias[0] = exp(-8/T);
-    energias[1] = exp(-4/T);
+    float energias[7];
+    energias[0] = exp(-8*J/T);
+    energias[1] = exp(-4*J/T);
     energias[2] = 1;
-    energias[3] = exp(4/T);
-    energias[4] = exp(8/T);
-    
+    energias[3] = exp(4*J/T);
+    energias[4] = exp(8*J/T);
+    energias[5] = exp(B/T);
+	energias[6] = exp(-B/T);
+	
 	//Comienza el programa
-	int i;
-	FILE *f = fopen("energias.txt", "w");
+	int i, j, k;
+	FILE *f = fopen("../corridas/energias.txt", "w");
+	FILE *f2 = fopen("../corridas/configuracion.txt", "w");
 	int *lattice = malloc(n * n * sizeof(int));
 	srand(time(NULL));
 	fill_lattice(lattice, n, prob);
-	float energia = energia_total(lattice, n);
+	float energia = energia_total(lattice, n, J, B);
 	//printf("%f\n", energia);
 	//print_lattice(lattice, n);
-	for(i = 0; i < 100000; i++){
-		energia = metropolis(lattice, n, energias, energia);	
+	for(k = 0; k < pasos; k++){
+		energia = metropolis(lattice, n, energias, energia, J, B);	
 		//printf("%f\n", energia);
 		//print_lattice(lattice, n);
 		fprintf(f, "%f\n", energia);
+		if(k%10000 == 0){
+			for(i = 0; i < n; i++){
+				fprintf(f2, "%d", lattice[i*n]);
+				for(j = 1; j < n; j++){
+					fprintf(f2, ",%d", lattice[i*n+j]);
+				}
+				fprintf(f2, "\n");
+			}
+		}		
 	}
 	fclose(f);
+	fclose(f2);	
 	free(lattice);
 	return 0;
 }
