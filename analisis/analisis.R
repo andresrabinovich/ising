@@ -14,19 +14,19 @@ theme_original <- function (base_size = 10, base_family = "") {
                           margin = margin(), debug = FALSE)
     )
 }
-setwd("~/Escritorio/fisica_computacional/ising/")
+setwd("~/fisica_computacional/ising/")
 
 
 #ej1a
 datos <-data.frame(read_csv("corridas/energias.txt", col_names = FALSE))
-ggplot(data=datos, aes(x=1:nrow(datos), y=X1)) + 
+n = 256
+ggplot(data=datos, aes(x=1:nrow(datos), y=X1/(n*n))) + 
   geom_point() + 
-  labs(title="Ising J=1, B=0") +
+  labs(title="Ising J=0, B=-1") +
   labs(x="Paso", y="Energia") +
   theme_original()
-configuracion <- data.frame(read_csv("~/Escritorio/fisica_computacional/ising/corridas/configuracion.txt", col_names = FALSE))
-n = 256
+configuracion <- data.frame(read_csv("corridas/configuracion.txt", col_names = FALSE))
 for(i in 1:100){
-  heatmap(as.matrix(configuracion)[(((i-1)*n)+1):(i*n), ], Colv=NA, Rowv=NA, scale='none')
+  heatmap(as.matrix(configuracion)[(((i-1)*n)+1):(i*n), ], Colv=NA, Rowv=NA, scale='none', labRow = NA, labCol = NA)
   invisible(readline(prompt="Press [enter] to continue"))
 }

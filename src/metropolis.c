@@ -2,8 +2,8 @@
 #include "stdlib.h"
 #include "stdio.h"
 
-float metropolis(int *lattice, int n, float *energias, float energia, float J, float B) {
-	return (flip(lattice, n, energias, energia, J, B));
+float metropolis(int *lattice, int n, float *energias, float energia, float J, float B, int *magnetizacion) {
+	return (flip(lattice, n, energias, energia, J, B, magnetizacion));
 }
 
 int pick_site(int *lattice, int n) {
@@ -11,15 +11,42 @@ int pick_site(int *lattice, int n) {
 	//return(rand()%n); //Esto es mas uniforme de lo que parece! pick_site_test.c
 }
 
-float flip(int *lattice, int n, float *energias, float energia, float J, float B) {
+float flip(int *lattice, int n, float *energias, float energia, float J, float B, int *magnetizacion) {
 	int sitio = pick_site(lattice, n*n);
-	float delta = -J*delta_energia(lattice, n, sitio)+B*lattice[sitio]; //El + en el campo da vuelta el sitio sin darlo vuelta
+    int variacion_configuracion = (int)delta_energia(lattice, n, sitio);
+	float delta = -J*variacion_configuracion+B*lattice[sitio]; //El + en el campo da vuelta el sitio sin darlo vuelta
+	float delta_energia;
 	if(delta < 0){
 		lattice[sitio] = -1*lattice[sitio];
+        (*magnetizacion) += lattice[sitio];
 		energia += delta;
 	}else{
-		if((float)rand()/RAND_MAX < (energias[(int)(0.25*delta)+2]*energias[(int)(0.5*(lattice[sitio]+1))+5])/energia){
+        switch(variacion_configuracion){
+            case -8:
+                delta_energia = energias[0];
+                break;
+            case -4:
+                delta_energia = energias[1];                
+                break;
+            case 0:
+                delta_energia = energias[2];                
+                break;
+            case 4:
+                delta_energia = energias[3];                
+                break;
+            case 8:
+                delta_energia = energias[4];                
+                break;
+        }
+        if(lattice[sitio] == 1){
+            delta_energia = delta_energia*energias[6];                
+        }else{
+            delta_energia = delta_energia*energias[5];                            
+        }
+        delta_energia = delta_energia/energia;
+		if((float)rand()/RAND_MAX < delta_energia){
 			lattice[sitio] = -1*lattice[sitio];
+            (*magnetizacion) += lattice[sitio];
 			energia += delta;
 		}
 	};
@@ -44,4 +71,13 @@ float energia_total(int *lattice, int n, float J, float B){
 		energia += 0.5*J*delta_energia(lattice, n, sitio)-B*lattice[sitio];  //delta_energia devuelve dos veces la energía del sitio con el signo correcto. Con 0.5 ajustamos ese factor.
 	}
 	return(energia);
+}
+
+int magnetizacion_total(int *lattice, int n){
+    int magnetizacion = 0;
+    int sitio;
+	for(sitio = 0; sitio < n*n; sitio++){
+		if(lattice[sitio] == 1) magnetizacion++;
+	}
+	return(magnetizacion);
 }

@@ -13,18 +13,18 @@ int main(int argc, char **argv) {
 	//Configuraciones
 	int n = 256;
 	float prob = 0.5;
-	float T = 100;
-	float J = 1;
-	float B = 0;
+	float T = 100000;
+	float J = 0;
+	float B = 1;
 	int pasos = 100000;
-	
+    
     //Calculamos las energías
     float energias[7];
-    energias[0] = exp(-8*J/T);
-    energias[1] = exp(-4*J/T);
+    energias[0] = exp(-8*J);
+    energias[1] = exp(-4*J);
     energias[2] = 1;
-    energias[3] = exp(4*J/T);
-    energias[4] = exp(8*J/T);
+    energias[3] = exp(4*J);
+    energias[4] = exp(8*J);
     energias[5] = exp(B/T);
 	energias[6] = exp(-B/T);
 	
@@ -36,14 +36,16 @@ int main(int argc, char **argv) {
 	srand(time(NULL));
 	fill_lattice(lattice, n, prob);
 	float energia = energia_total(lattice, n, J, B);
-	//printf("%f\n", energia);
+    int magnetizacion = magnetizacion_total(lattice, n);
+	//printf("%d\n", magnetizacion);
 	//print_lattice(lattice, n);
 	for(k = 0; k < pasos; k++){
-		energia = metropolis(lattice, n, energias, energia, J, B);	
+		energia = metropolis(lattice, n, energias, energia, J, B, &magnetizacion);	
 		//printf("%f\n", energia);
 		//print_lattice(lattice, n);
-		fprintf(f, "%f\n", energia);
-		if(k%10000 == 0){
+		fprintf(f, "%d\n", magnetizacion);
+		/*
+        if(k%1000 == 0){
 			for(i = 0; i < n; i++){
 				fprintf(f2, "%d", lattice[i*n]);
 				for(j = 1; j < n; j++){
@@ -51,8 +53,11 @@ int main(int argc, char **argv) {
 				}
 				fprintf(f2, "\n");
 			}
-		}		
+		}
+		*/
 	}
+    //printf("%d\n", magnetizacion);
+	//print_lattice(lattice, n);    
 	fclose(f);
 	fclose(f2);	
 	free(lattice);
