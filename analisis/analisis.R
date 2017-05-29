@@ -18,15 +18,25 @@ setwd("~/fisica_computacional/ising/")
 
 
 #ej1a
-datos <-data.frame(read_csv("corridas/energias.txt", col_names = FALSE))
-n = 256
-ggplot(data=datos, aes(x=1:nrow(datos), y=X1/(n*n))) + 
+datos <-data.frame(read_csv("corridas/energia.txt"))
+#datos
+dim(datos)
+ggplot(data=datos, aes(x=1:nrow(datos), y=energia)) + 
   geom_point() + 
-  labs(title="Ising J=0, B=-1") +
-  labs(x="Paso", y="Energia") +
+  #labs(title="Ising J=0, B=-1") +
+  labs(x=colnames(datos)[1], y=colnames(datos)[2]) +
   theme_original()
-configuracion <- data.frame(read_csv("corridas/configuracion.txt", col_names = FALSE))
-for(i in 1:100){
-  heatmap(as.matrix(configuracion)[(((i-1)*n)+1):(i*n), ], Colv=NA, Rowv=NA, scale='none', labRow = NA, labCol = NA)
+datos <-data.frame(read_csv("corridas/magnetizacion.txt"))
+datos
+dim(datos)
+ggplot(data=datos, aes(x=1:nrow(datos), y=magnetizacion)) + 
+  geom_point() + 
+  #labs(title="Ising J=0, B=-1") +
+  labs(x=colnames(datos)[1], y=colnames(datos)[2]) +
+  theme_original()
+configuracion <- data.frame(read_csv("corridas/configuraciones.txt", col_names = FALSE))
+dim(configuracion)
+for(i in seq(from=1, to=(nrow(configuracion)/ncol(configuracion)), by=1)){
+  heatmap(as.matrix(configuracion)[(((i-1)*ncol(configuracion))+1):(i*ncol(configuracion)), ], Colv=NA, Rowv=NA, scale='none', labRow = NA, labCol = NA)
   invisible(readline(prompt="Press [enter] to continue"))
 }
