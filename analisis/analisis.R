@@ -14,8 +14,35 @@ theme_original <- function (base_size = 10, base_family = "") {
                           margin = margin(), debug = FALSE)
     )
 }
-setwd("~/fisica_computacional/ising/")
+setwd("~/Escritorio/fisica_computacional/ising/")
 
+
+#TERMALIZACION
+datos <-data.frame(read_csv("corridas/termalizacion/magnetizacion.txt"))
+teorico <- tanh(1/unique(datos$T))
+datos$T <- as.factor(datos$T)
+ggplot(data=datos, aes(x=iteracion, y=magnetizacion, colour=T)) + 
+  geom_point() + 
+  geom_hline(yintercept = teorico[1]) + 
+  geom_hline(yintercept = teorico[2]) + 
+  geom_hline(yintercept = teorico[3]) + 
+  geom_hline(yintercept = teorico[4]) + 
+  geom_hline(yintercept = teorico[5]) + 
+  geom_hline(yintercept = teorico[6]) + 
+  geom_hline(yintercept = teorico[7]) + 
+  geom_hline(yintercept = teorico[8]) + 
+  labs(title="Magnetización J=0, B=1") +
+  labs(x=colnames(datos)[1], y=colnames(datos)[3]) +
+  theme_original()
+
+#MAGNETIZACION ESPONTANEA
+datos   <-data.frame(read_csv("corridas/magnetizacion.txt"))
+magnetizacion_media <- aggregate(formula = magnetizacion ~ T, data = datos, FUN=mean)
+ggplot(data=magnetizacion_media, aes(x=T, y=magnetizacion)) + 
+  geom_line() + 
+  labs(title="Magnetización J=1, B=0") +
+  labs(x=colnames(magnetizacion_media)[1], y=colnames(magnetizacion_media)[2]) +
+  theme_original()
 
 #ej1a
 datos <-data.frame(read_csv("corridas/energia.txt"))
@@ -24,19 +51,13 @@ dim(datos)
 ggplot(data=datos, aes(x=1:nrow(datos), y=energia)) + 
   geom_point() + 
   #labs(title="Ising J=0, B=-1") +
-  labs(x=colnames(datos)[1], y=colnames(datos)[2]) +
+  labs(x=colnames(datos)[1], y=colnames(datos)[3]) +
   theme_original()
-datos <-data.frame(read_csv("corridas/magnetizacion.txt"))
-datos
-dim(datos)
-ggplot(data=datos, aes(x=1:nrow(datos), y=magnetizacion)) + 
-  geom_point() + 
-  #labs(title="Ising J=0, B=-1") +
-  labs(x=colnames(datos)[1], y=colnames(datos)[2]) +
-  theme_original()
+
 configuracion <- data.frame(read_csv("corridas/configuraciones.txt", col_names = FALSE))
 dim(configuracion)
 for(i in seq(from=1, to=(nrow(configuracion)/ncol(configuracion)), by=1)){
   heatmap(as.matrix(configuracion)[(((i-1)*ncol(configuracion))+1):(i*ncol(configuracion)), ], Colv=NA, Rowv=NA, scale='none', labRow = NA, labCol = NA)
   invisible(readline(prompt="Press [enter] to continue"))
 }
+
