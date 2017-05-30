@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
 	float T = 1;
 	float J = 1/T;
 	float B = 1;
-	int pasos = 1000000;
+	int pasos = 100000;
     int pasos_termalizacion = 0;
     int promedios = 1;
     
@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
     srand(time(NULL));
     
     //Comienza el programa
-    for(T = 0.1; T <= 5; T = T + 0.1){
+    for(T = 1; T <= 1; T = T + 0.1){
     
         //Mostramos T actual
         printf("Ising a T = %.2f\n", T);
@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
         magnetizacion_promedio = 0;
         
         //Calculamos los promedios
-        for(promedio = 0; i < promedios; promedio++){
+        for(promedio = 0; promedio < promedios; promedio++){
             //Llenamos la red y calculamos las propiedades iniciales
             fill_lattice(lattice, n, prob);
             energia = energia_total(lattice, n, J, B);
@@ -90,14 +90,14 @@ int main(int argc, char **argv) {
                     }
                 }
                 */
-                if(paso%1000 == 0){
+                //if(paso%1000 == 0){
                     //magnetizacion_promedio += magnetizacion;  
                     fprintf(f, "%f,%f\n", T, energia/promedios);
                     //fprintf(f2, "%f,%f\n", T, (float)magnetizacion_promedio/(n*n)/promedios/(pasos/200));                    
                     fprintf(f2, "%f,%f\n", T, (float)magnetizacion/(n*n));                    
-                }
+                //}
             }
-            energia_promedio += energia;
+            //energia_promedio += energia;
             //magnetizacion_promedio += magnetizacion;            
         }
 
