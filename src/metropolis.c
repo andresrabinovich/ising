@@ -3,7 +3,7 @@
 #include "stdio.h"
 
 float metropolis(int *lattice, int n, float *energias, float energia, float J, float B, int *magnetizacion, int corona) {
-	return (flip(lattice, (n-2*corona), energias, energia, J, B, magnetizacion, corona));
+	return (flip(lattice, n, energias, energia, J, B, magnetizacion, corona));
 }
 
 int pick_site(int *lattice, int n) {
@@ -72,10 +72,10 @@ int delta_energia(int *lattice, int n, int sitio, int corona){
 			derecha   = lattice[(j < n-1 ? sitio+1:n*i)];			
 			break;
 		default:
-			arriba    = (i == 0 ? corona:lattice[sitio-n]);
-			abajo     = (i == n ? corona:lattice[sitio+n]);
-			izquierda = (j == 0 ? corona:lattice[sitio-1]);
-			derecha   = (j == n ? corona:lattice[sitio+1]);						
+			arriba    = (i > 0 ? lattice[sitio-n]:corona);
+			abajo     = (i < (n-1) ? lattice[sitio+n]:corona);
+			izquierda = (j > 0 ? lattice[sitio-1]:corona);
+			derecha   = (j < (n-1) ? lattice[sitio+1]:corona);						
 			break;
 			
 	}
