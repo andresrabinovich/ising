@@ -14,7 +14,7 @@ theme_original <- function (base_size = 10, base_family = "") {
                           margin = margin(), debug = FALSE)
     )
 }
-setwd("~/Escritorio/fisica_computacional/ising/")
+setwd("~/fisica_computacional/ising/")
 
 
 #TERMALIZACION
@@ -35,29 +35,101 @@ ggplot(data=datos, aes(x=iteracion, y=magnetizacion, colour=T)) +
   labs(x=colnames(datos)[1], y=colnames(datos)[3]) +
   theme_original()
 
-#MAGNETIZACION ESPONTANEA
-datos   <-data.frame(read_csv("corridas/magnetizacion.txt"))
-magnetizacion_media <- aggregate(formula = magnetizacion ~ T, data = datos, FUN=mean)
-ggplot(data=magnetizacion_media, aes(x=T, y=magnetizacion)) + 
-  geom_line() + 
-  labs(title="Magnetización J=1, B=0") +
-  labs(x=colnames(magnetizacion_media)[1], y=colnames(magnetizacion_media)[2]) +
-  theme_original()
-
-#ej1a
-datos <-data.frame(read_csv("corridas/energia.txt"))
-#datos
-dim(datos)
-ggplot(data=datos, aes(x=1:nrow(datos), y=energia)) + 
-  geom_point() + 
-  #labs(title="Ising J=0, B=-1") +
-  labs(x=colnames(datos)[1], y=colnames(datos)[3]) +
-  theme_original()
-
-configuracion <- data.frame(read_csv("corridas/configuraciones.txt", col_names = FALSE))
-dim(configuracion)
-for(i in seq(from=1, to=(nrow(configuracion)/ncol(configuracion)), by=1)){
-  heatmap(as.matrix(configuracion)[(((i-1)*ncol(configuracion))+1):(i*ncol(configuracion)), ], Colv=NA, Rowv=NA, scale='none', labRow = NA, labCol = NA)
-  invisible(readline(prompt="Press [enter] to continue"))
+#AUTOCORRELACION
+datos   <-data.frame(read_csv("corridas/autocorrelacion_magnetizacion.txt"))
+autocorrelacion <- matrix(ncol=2, nrow=0)
+lag.max = 10000
+for(i in unique(datos$T)){
+  energia_t <- datos$magnetizacion[datos$T == i]
+  a<-acf(energia_t, lag.max = lag.max)
+  autocorrelacion <- rbind(autocorrelacion, cbind(a$acf, rep(i, (lag.max+1))))
 }
+autocorrelacion <- data.frame(autocorrelacion)
+colnames(autocorrelacion) <- c("rho", "T")
+autocorrelacion$T <- as.factor(autocorrelacion$T)
 
+ggplot(data=autocorrelacion, aes(x=rep(1:(lag.max+1), times=length(unique(datos$T))), y=rho)) + 
+  geom_line(aes(color=T)) + 
+  labs(title="Autocorrelación magnetizacion (B=0)") +
+  labs(x="k", y="rho") +
+  theme_original()
+
+#Autocorrelacion de forma casera
+#s <- sd(energia_t)^2
+#energia_t <- energia_t-mean(energia_t)
+#comienzo = 1:length(datos$energia[datos$T == 1])
+#ro <- c()
+#for(k in 0:10000){
+  #  comienzo <- 1:(length(energia_t)-k)
+  #  r <- mean(energia_t[comienzo] * energia_t[comienzo+k])/mean(energia_t[comienzo]^2)
+  #ro <- c(ro,r)
+#}
+#plot(ro)
+
+#MAGNETIZACION ESPONTANEA SIN CORONA
+datos   <-data.frame(read_csv("corridas/sin_corona/magnetizacion.txt"))
+ggplot(data=datos, aes(x=magnetizacion)) + 
+  geom_histogram(aes(y=..count../sum(..count..)), 
+  breaks=seq(-1, 1, by = 0.01), 
+  col="black", 
+  fill="white") + 
+  labs(title="Histogram for Age") +
+  labs(x="Age", y="Count") +  
+  labs(title="Magnetización (T entre 0.5 y 5), B=0") +
+  labs(x="Magnetización", y="Densidad") +
+  theme_original()
+
+
+#MAGNETIZACION ESPONTANEA
+datos   <-data.frame(read_csv("corridas/con_corona/magnetizacion.txt"))
+magnetizacion_media <- aggregate(formula = magnetizacion ~ T+n, data = datos, FUN=mean)
+magnetizacion_media$n <- as.factor(magnetizacion_media$n)
+ggplot(data=magnetizacion_media, aes(x=T, y=magnetizacion)) + 
+  geom_point(aes(color=n)) + 
+  labs(title="Magnetización (B=0)") +
+  labs(x="T", y="Magnetización media por particula") +
+  theme_original()
+
+#ENERGIA
+datos   <-data.frame(read_csv("corridas/con_corona/energia.txt"))
+energia_media <- aggregate(formula = energia ~ T+n, data = datos, FUN=mean)
+energia_media$n <- as.factor(energia_media$n)
+ggplot(data=energia_media, aes(x=T, y=energia)) + 
+  geom_point(aes(color=n)) + 
+  labs(title="Energía media (B=0)") +
+  labs(x="T", y="Energía media por particula") +
+  theme_original()
+
+#SUSCEPTIBILIDAD MAGNETICA
+datos   <-data.frame(read_csv("corridas/con_corona/magnetizacion.txt"))
+susceptibilidad <- aggregate(formula = magnetizacion ~ T+n, data = datos, FUN=sd)
+susceptibilidad$n <- as.factor(susceptibilidad$n)
+ggplot(data=susceptibilidad, aes(x=T, y=magnetizacion)) + 
+  geom_point(aes(color=n)) + 
+  labs(title="Susceptibilidad (B=0)") +
+  labs(x="T", y="Susceptibilidad por particula") +
+  theme_original()
+
+noisy.y <- susceptibilidad[susceptibilidad$n==32, c("T", "magnetizacion")]
+model <- lm(noisy.y$magnetizacion ~ poly(noisy.y$T,20))
+predicted.intervals <- predict(model,data.frame(x=noisy.y$T),interval='confidence', level=0.99)
+plot(noisy.y)
+lines(noisy.y$T,predicted.intervals[,1],col='green',lwd=3)
+noisy.y$T[which.max(predicted.intervals[, 1])]
+
+#Cv
+datos   <-data.frame(read_csv("corridas/con_corona/energia.txt"))
+cv      <- aggregate(formula = energia ~ T+n, data = datos, FUN=sd)
+cv$n <- as.factor(cv$n)
+ggplot(data=cv, aes(x=T, y=energia)) + 
+  geom_point(aes(color=n)) + 
+  labs(title="Cv (B=0)") +
+  labs(x="T", y="Cv por particula") +
+  theme_original()
+
+noisy.y <- cv[cv$n==128, c("T", "energia")]
+model <- lm(noisy.y$energia ~ poly(noisy.y$T,20))
+predicted.intervals <- predict(model,data.frame(x=noisy.y$T),interval='confidence', level=0.99)
+plot(noisy.y)
+lines(noisy.y$T,predicted.intervals[,1],col='green',lwd=3)
+noisy.y$T[which.max(predicted.intervals[, 1])]
