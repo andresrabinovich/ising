@@ -80,17 +80,15 @@ El valor de expectación de un observable $A$ está dado por:
 \label{A}
 \end{equation}
 donde $A_{\nu}$ es el valor de $A$ en el estado $\nu$ y $p_{\nu}$ es la probabilidad de que el sistema se encuentre en ese estado.\\
-Por lo tanto, dado un sistema con una cantidad discreta de estados, se podría calcular $A_{nu}$ para todos los estados y calcular su promedio pesado. Sin embargo, para un sistema simple como el de 
-Ising 2D, con  por ejemplo $L=20$, se tienen $2^{400}$ estados diferentes del sistema, por lo que resulta imposible examinarlos todos.
-
-La probabilidad de que el sistema se encuentre en alguna configuración $\{s_\nu\}$ con energía $E(\{s_\nu\})$ se puede obtener a partir del ensamble canónico y está dada por la ecuación:
+La probabilidad de que el sistema se encuentre en alguna configuración $\{s_\nu\}$ con energía $E(\{a_\nu)$ se puede obtener a partir del ensamble canónico y está dada por la ecuación:
 \begin{equation}
 \langle A \rangle=\sum_{\nu}{A_{\nu}p_{\nu}},
 \label{}
 \end{equation}
 
 
-
+Por lo tanto, dado un sistema con una cantidad discreta de estados, se podría calcular $A_{nu}$ para todos los estados y calcular su promedio pesado. Sin embargo, para un sistema simple como el de 
+Ising 2D, con  por ejemplo $L=20$, se tienen $2^{400}$ estados diferentes del sistema, por lo que resulta imposible examinarlos todos.
 
 
 Se escribió un código de simulación Monte Carlo del

@@ -8,6 +8,7 @@
 \usepackage[none]{hyphenat}
 \usepackage[left=1cm,top=2.5cm,right=1cm,bottom=2.5cm]{geometry} 
 \usepackage{subfig}
+\usepackage[]{mcode}
 
 \begin{document}
 
@@ -15,12 +16,14 @@
 \centering
   \begin{@twocolumnfalse}
 \begin{LARGE}
-\textbf{Ising 2D por medio de sampléo Metrópolis-Montecarlo} \\
+\textbf{Práctica computacional: modelo de Ising} \\
 \end{LARGE}
 \vspace{10pt}
 %\begin{Large}
 
 Andrés Rabinovich\\
+Axel Andrés Hofele\\
+Mariana Paula Scilingo\\
 \today
 %\end{Large}
 %\hspace{15pt}
@@ -37,61 +40,26 @@ sistema, comportándose como ferromagnético (paramagnético) para temperaturas 
 ]
 
 \section{Introducción}
-En ciertos metales como el hierro y el níquel, se observa la aparición de un momento magnético de caracter macroscópico, producido por la polarización espontánea en la misma dirección y sentido de 
-una fracción 
-de los spines de los átomos que constituyen el material. Esta magnetizacion espontánea se conoce como ferromagnetismo y es un efecto que solo se observa para temperaturas por 
-debajo de 
-una temperatura crítica $T_c$, llamada Temperatura de Curie. Para temperaturas mayores a $T_c$, la agitación térmica de las partículas
-no permite un ordenamiento espontáneo de los spines. Se observa además que a medida que la temperatura se acerca a $T_c$, el calor específico del material se incrementa arbitrariamente, lo que 
-sugiere que en la Temperatura de Curie ocurre una transición de fase de un estado ordenado a uno desordenado.\cite{huang}
 
-\section{El modelo}
-La descripción teórica más sencilla del ferromagnetismo es el modelo de Ising, modelo propuesto por Wilhelm Lenz en 1920 para el estudio de la magnetización de materiales ferromagnéticos 
-como el hierro. En Ising 2D, se modela al material como un arreglo cuadrado de spines fijos donde cada spin puede tomar dos valores distintos: $s_i= \pm$1, figura \ref{fig:red_spines}, teniendo en 
-cuenta la interacción de cada spin con sus vecinos. El hamiltoniano del modelo es por lo tanto:
+El modelo de Ising fue propuesto para el estudio
+de la magnetización de los materiales ferromagnéticos.
+Se modela al material como una cadena spines, que
+pueden tomar dos valores distintos: $s_i= \pm$1. Se tiene
+en cuenta también la interacción a primeros vecinos. El
+hamiltoniano es:
 
 \begin{equation}
-H=-\sum_{<ij>}{Js_is_j}-\sum_{<ij>}{J's_is_j}-B\sum_{i}{s_i},
+H=-\sum_{<ij>}{Js_is_j}-\mu B\sum_{i}{s_i},
 \label{hamiltoniano}
 \end{equation}
 
-donde $J$, la constante de acoplamiento modela la interacción entre un spin y sus primeros vecinos, $J'$ modela la interacción entre un spin y sus segundos vecinos y $B$ es un campo magnético 
-externo. 
-\begin{minipage}{0.45\textwidth}									
-\centering
-\includegraphics[width=0.4\textwidth]{imagenes/red_spines}
-\captionof{figure}{Arreglo de spines fijos en el modelo de Ising. La línea punteada indica los primeros vecinos del spin encerrado por doble línea. Tomado de Muglia\cite{muglia}.}
-\label{fig:red_spines}
-\end{minipage}
-En este trabajo utilizaremos $J$ y $J'$ isótropos. Para $J>0$ el material es ferromagnético mientras que para $J<$ 0 el material es antiferromagnético. Éste hamiltoniano favorece que 
-los spines estén alineados, porque si $s_i=s_j$ entonces la energía disminuye en una cantidad $J$.\\
-En el modelo de Ising 2D la temperatura crítica $T_c$ para $B=0$ y $J'=0$ puede ser obtenida de forma analítica mediante la ecuación \cite{onsager}:
-
-\begin{equation}
-T_c = \frac{J}{k_B}\frac{2}{ln(2+\sqrt{2}},
-\label{T_c}
-\end{equation}
-con $k_B$ la constante de Boltzmann. Tomando $\frac{J}{k_B}=1$ se obtiene $T_c\approx2.27$ adimensional.
+donde $J$ modela la interacción y B es un campo
+magnético externo. En este trabajo utilizaremos J
+isótropo y constante. Se dice que cuando $J$ $>$ 0 el
+material es ferromagnético y si $J$ $<$ 0 el material es
+antiferromagnético.
 
 \section{Programa de simulación del modelo de Ising}
-El valor de expectación de un observable $A$ está dado por:
-\begin{equation}
-\langle A \rangle=\sum_{\nu}{A_{\nu}p_{\nu}},
-\label{A}
-\end{equation}
-donde $A_{\nu}$ es el valor de $A$ en el estado $\nu$ y $p_{\nu}$ es la probabilidad de que el sistema se encuentre en ese estado.\\
-Por lo tanto, dado un sistema con una cantidad discreta de estados, se podría calcular $A_{nu}$ para todos los estados y calcular su promedio pesado. Sin embargo, para un sistema simple como el de 
-Ising 2D, con  por ejemplo $L=20$, se tienen $2^{400}$ estados diferentes del sistema, por lo que resulta imposible examinarlos todos.
-
-La probabilidad de que el sistema se encuentre en alguna configuración $\{s_\nu\}$ con energía $E(\{s_\nu\})$ se puede obtener a partir del ensamble canónico y está dada por la ecuación:
-\begin{equation}
-\langle A \rangle=\sum_{\nu}{A_{\nu}p_{\nu}},
-\label{}
-\end{equation}
-
-
-
-
 
 Se escribió un código de simulación Monte Carlo del
 modelo de Ising, empleando el algoritmo Metrópolis
@@ -219,8 +187,8 @@ En la figura \ref{termalizacion} se muestra la termalización para una red de 64
 
 \begin{minipage}{0.45\textwidth}									
 \centering
-%\includegraphics[totalheight=0.25\textheight]{figuras/termalizacion.png}
-%\captionof{figure}{Termalización en una red de L = 64}
+\includegraphics[totalheight=0.25\textheight]{figuras/termalizacion.png}
+\captionof{figure}{Termalización en una red de L = 64}
 \label{termalizacion}
 \end{minipage}
 
@@ -234,8 +202,8 @@ sistema. Esto sucede cuando los espines se alinean al presentarse una magnetizac
 
 \begin{minipage}{0.45\textwidth}									
 \centering
-%\includegraphics[totalheight=0.25\textheight]{figuras/energia.png}
-%\captionof{figure}{Energía media por partícula en función de la temperatura para redes de distinto lado L}
+\includegraphics[totalheight=0.25\textheight]{figuras/energia.png}
+\captionof{figure}{Energía media por partícula en función de la temperatura para redes de distinto lado L}
 \label{grafico_energia}
 \end{minipage}
 
@@ -248,8 +216,8 @@ específico en función de la temperatura. Se observa un máximo alrededor de la
 
 \begin{minipage}{0.45\textwidth}									
 \centering
-%\includegraphics[totalheight=0.25\textheight]{figuras/capacidad_calorifica.png}
-%\captionof{figure}{Capacidad calorífica por partícula en función de la temperatura para redes de distinto lado L}
+\includegraphics[totalheight=0.25\textheight]{figuras/capacidad_calorifica.png}
+\captionof{figure}{Capacidad calorífica por partícula en función de la temperatura para redes de distinto lado L}
 \label{grafico_capacidad_calorifica}
 \end{minipage}
 
@@ -258,8 +226,8 @@ En la figura \ref{capacidad_calorifica_con_ajuste_polinomial} se observa un grá
 
 \begin{minipage}{0.45\textwidth}									
 \centering
-%\includegraphics[totalheight=0.25\textheight]{figuras/capacidad_calorifica_con_ajuste_polinomial.png}
-%\captionof{figure}{Capacidad calorífica por partícula en función de la temperatura para una red de L = 64 y ajuste polinomial}
+\includegraphics[totalheight=0.25\textheight]{figuras/capacidad_calorifica_con_ajuste_polinomial.png}
+\captionof{figure}{Capacidad calorífica por partícula en función de la temperatura para una red de L = 64 y ajuste polinomial}
 \label{capacidad_calorifica_con_ajuste_polinomial}
 \end{minipage}
 
@@ -277,8 +245,8 @@ mayores.
 
 \begin{minipage}{0.45\textwidth}									
 \centering
-%\includegraphics[totalheight=0.25\textheight]{figuras/magnetizacion.png}
-%\captionof{figure}{Magnetización media por partícula en función de la temperatura para redes de distinto lado L}
+\includegraphics[totalheight=0.25\textheight]{figuras/magnetizacion.png}
+\captionof{figure}{Magnetización media por partícula en función de la temperatura para redes de distinto lado L}
 \label{grafico_magnetizacion}
 \end{minipage}
 
@@ -291,8 +259,8 @@ los valores esperados para la $T_c$.
 
 \begin{minipage}{0.45\textwidth}									
 \centering
-%\includegraphics[totalheight=0.25\textheight]{figuras/susceptibilidad_magnetica.png}
-%\captionof{figure}{Susceptibilidad magnética por partícula en función de la temperatura para redes de distinto lado L}
+\includegraphics[totalheight=0.25\textheight]{figuras/susceptibilidad_magnetica.png}
+\captionof{figure}{Susceptibilidad magnética por partícula en función de la temperatura para redes de distinto lado L}
 \label{grafico_susceptibilidad_magnetica}
 \end{minipage}
 
@@ -334,6 +302,271 @@ ocurre en $T_c\approx2,26$ al ajustar por un polinomio el máximo del calor espe
 era de 2,269 aproximadamente. También se analizaron los
 efectos de tamaño finito, analizando distintos tamaños
 de la red.
+
+\onecolumn
+\section{Código}
+\subsection{programaprincipal.m}
+\begin{lstlisting}
+%Script para realizar ising monte carlo metropolis con una red de L*L
+%LIMPIAMOS EL AREA DE TRABAJO
+clear
+delete(findall(0,'Type','figure'))
+bdclose('all')
+
+%CONFIGURACIONES
+L = 10; %Lado de la red
+%Pasos de termalizacion (elegimos termalizar con 120000 flips despues de
+%hacer varias pruebas)
+termalizacion = 120000/L^2; 
+%Pasos de ising. Cuantos mas mejor, pero como el tiempo es finito, elegimos
+%hacer 200 pasadas por cada temperatura
+pasos_de_ising = 200; 
+%HASTA ACA LAS CONFIGURACIONES
+
+%Generamos el vector de temperaturas dando mas puntos a las temperaturas de
+%interes (desde 1.1 hasta 3.5 damos 120 puntos)
+temperatura = horzcat(linspace(0.1,1,10), linspace(1.1,3.5,120), linspace(3.6,4.5,10));
+pasos_totales = 10 + 10 + 120;
+
+%Inicializamos variables;
+energia_media = zeros(pasos_totales, 1);
+magnetizacion_media = zeros(pasos_totales, 1);
+susceptibilidad_media = zeros(pasos_totales, 1);
+calor_especifico_media = zeros(pasos_totales, 1);
+%Sirve para relacionar los vectores termodinamicos con la temperatura
+paso_actual = 0; 
+
+%Generamos una matriz de L*L al azar de -1's y 1's
+Sij=2*(rand(L, L)>0.5) -1; 
+
+%Termalizamos en T = 0.1 porque es lo mas rapido
+beta = 1/0.1;
+for i=1:termalizacion
+    for j=1:L %j es filas
+        for k=1:L %k es columnas
+            dU = variacion_de_energia(Sij, j, k, beta, L);
+            if dU < 0 || exp(-beta*dU) > rand() %Acepto
+                Sij(j, k) = -Sij(j, k);
+            end
+        end
+    end
+end
+
+%Comenzamos ising. Mostramos el paso actual, la temperatura actual y el
+%tiempo que tardo en hacerlo
+for T = temperatura
+    tic
+    paso_actual = paso_actual + 1
+    T
+    beta = 1/T;
+    energias = zeros(pasos_de_ising, 1);
+    magnetizaciones = zeros(pasos_de_ising, 1);    
+    for i=1:pasos_de_ising
+        for j=1:L %j es filas
+            for k=1:L %k es columnas
+                dU = variacion_de_energia(Sij, j, k, beta, L);
+                if dU < 0 || exp(-beta*dU) > rand() %Acepto
+                    Sij(j, k) = -Sij(j, k);
+                end
+            end
+        end
+        energias(i) = energia_total(Sij, beta, L);
+        magnetizaciones(i) = magnetizacion_total(Sij, L);
+    end
+    energia_media(paso_actual) = mean(energias);
+    calor_especifico_media(paso_actual) = (std(energias)/T)^2; 
+    magnetizacion_media(paso_actual) = mean(magnetizaciones);
+    susceptibilidad_media(paso_actual) = (std(magnetizaciones)^2)/T;
+    toc
+end
+%Mostramos las figuras de cada vector termodinamico. Lo que importa, de
+%todas formas, es la salida en el workspace.
+figure;
+plot(temperatura, energia_media/L^2, '.');
+grid on
+title('Energia media por particula')
+xlabel('Temperatura')
+ylabel('Energia')
+figure;
+plot(temperatura, calor_especifico_media/L^2, '.');
+grid on
+title('Calor especifico')
+xlabel('Temperatura')
+ylabel('Cv')
+figure;
+plot(temperatura, magnetizacion_media/L^2, '.');
+grid on
+title('Magnetizacion media por particula')
+xlabel('Temperatura')
+ylabel('Magnetizacion')
+figure;
+plot(temperatura, susceptibilidad_media/L^2, '.');
+grid on
+title('Susceptibilidad magnetica')
+xlabel('Temperatura')
+ylabel('Xm')
+\end{lstlisting}
+\subsection{variaciondeenergia.m}
+\begin{lstlisting}
+%Funcion para calcular la variacion de energia en el sistema producto de un
+%flip en un spin
+function dU = variacion_de_energia(Sij, fila, columna, beta, L)
+    energia_vieja = 0;
+    energia_nueva = 0;
+    vecinos = encontrar_vecinos(fila, columna, L);
+    %calculamos la energia vieja del entorno invertido (arriba y derecha)
+    for i=1:2
+        energia_vieja = energia_vieja + energia_1_elemento(Sij, beta, vecinos(i, 1), vecinos(i, 2), L);
+    end
+    energia_vieja = energia_vieja + energia_1_elemento(Sij, beta, fila, columna, L);    
+    
+    %damos vuelta el spin
+    Sij(fila, columna) = -Sij(fila, columna);
+
+    %calculamos la energia nueva del entorno invertido (arriba y derecha)
+    for i=1:2
+        energia_nueva = energia_nueva + energia_1_elemento(Sij, beta, vecinos(i, 1), vecinos(i, 2), L);
+    end
+    energia_nueva = energia_nueva + energia_1_elemento(Sij, beta, fila, columna, L);    
+    %devolvemos la variacion en la energia
+    dU = energia_nueva - energia_vieja; 
+    
+end
+\end{lstlisting}
+\subsection{energiatotal.m}
+\begin{lstlisting}
+%funcion que calcula la energia total de una configuracion sumando la
+%energia de cada uno de sus componentes
+function U = energia_total(Sij, beta, L)
+    U = 0;
+    for j=1:L
+        for k=1:L
+            U = U + energia_1_elemento(Sij, beta, j, k, L);
+        end
+    end
+end
+\end{lstlisting}
+\subsection{magnetizaciontotal.m}
+\begin{lstlisting}
+%funcion que calcula la magnetizacion total de una configuracion sumando la
+%magnetizacion de cada uno de sus componentes
+function M = magnetizacion_total(Sij, L)
+    M = 0;
+    for j=1:L
+        for k=1:L
+            M = M + Sij(j, k);
+        end
+    end
+end
+\end{lstlisting}
+\subsection{encontrarvecinos.m}
+\begin{lstlisting}
+%funcion para encontrar los cuatro vecinos de un spin con condiciones de 
+%contorno periodicas. Vecino 1 es arriba,
+%vecino 2 es izquierda, vecino 3 es derecha y vecino 4 es abajo
+function vecino = encontrar_vecinos(fila, columna, L)
+    vecino = zeros(4, 2);
+    
+    vecino(1,1) = fila-1;
+    vecino(1,2) = columna;
+
+    vecino(2,1) = fila;
+    vecino(2,2) = columna-1;
+
+    vecino(3,1) = fila;
+    vecino(3,2) = columna+1;
+
+    vecino(4,1) = fila + 1;
+    vecino(4,2) = columna;
+   
+    if((fila - 1) < 1)
+        vecino(1, 1) = L;
+    end
+    if((columna - 1) < 1)
+        vecino(2, 2) = L;
+    end
+    if((columna + 1) > L)
+        vecino(3, 2) = 1;
+    end
+    if((fila + 1) > L)
+        vecino(4, 1) = 1;
+    end
+end
+\end{lstlisting}
+\subsection{energia1elemento.m}
+\begin{lstlisting}
+%funcion para calcular la energia de un elemento. La calcula viendo la
+%interaccion entre si mismo y derecha y abajo
+function U = energia_1_elemento(Sij, beta, fila, columna, L)
+
+    j = 1; %El j de ising
+    uB = 0; %El valor del campo magnetico aplicado por u
+
+    M = Sij(fila, columna);
+    U = 0;
+    vecinos = encontrar_vecinos(fila, columna, L);
+    for i=3:4
+        U = U -j*M*Sij(vecinos(i, 1), vecinos(i, 2));
+    end
+end
+\end{lstlisting}
+\subsection{termalizaciones.m}
+\begin{lstlisting}
+%Script para investigar distintas termalizaciones a diferentes temperaturas
+%y diferentes redes.
+
+%LIMPIAMOS EL AREA DE TRABAJO
+clear
+delete(findall(0,'Type','figure'))
+bdclose('all')
+
+%CONFIGURACIONES
+temperaturas = [1/0.1, 1/2.3, 1/4.5]; 
+L = 64; %Lado de la red
+termalizacion = 200000/L^2;
+%HASTA ACA LAS CONFIGURACIONES
+
+energias = zeros(termalizacion, 3);
+paso = 0;
+for beta = temperaturas
+    paso = paso + 1
+     %Generar una matriz de L*L al azar de -1's y 1's
+    Sij=2*(rand(L, L)>0.5) -1;
+    for i=1:termalizacion
+        i
+        for j=1:L %j es filas
+            for k=1:L %k es columnas
+                dU = variacion_de_energia(Sij, j, k, beta, L);
+                if dU < 0 || exp(-beta*dU) > rand() %Acepto
+                    Sij(j, k) = -Sij(j, k);
+                end
+            end
+        end
+        energias(i, paso) = energia_total(Sij, beta, L);
+    end
+end
+\end{lstlisting}
+\subsection{ajustepolinomial.m}
+\begin{lstlisting}
+%Fitiamos el calor_especifico con un polinomio de algun grado, lo
+%imprimimos superpuesto al plot del calor especifico y buscamos cuanto vale
+%la temperatura para el maximo
+grado_del_polinomio = 20;
+polinomio_de_ajuste = polyfit(temperatura', calor_especifico_media_50/2500, grado_del_polinomio);
+x = linspace(0.1, 4.5, 1400);
+y = polyval(polinomio_de_ajuste, x);
+figure
+plot(temperatura', calor_especifico_media_50/2500, '.');
+hold on
+plot(x,y)
+hold off
+%Buscamos el maximo y lo imprimimos. Nos quedamos con el que nos sirve que
+%es la "Tc"
+extremos = roots(polyder(polinomio_de_ajuste));
+y1 = polyval(polinomio_de_ajuste, extremos);
+horzcat(extremos, y1)
+
+\end{lstlisting}
 \end{document}
 
 
