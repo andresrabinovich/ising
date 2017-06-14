@@ -12,19 +12,19 @@ int main(int argc, char **argv) {
 	int ns[4] = {32, 64, 128, 256};
 	float prob = 0.5;
 	float T_inicial = 5;
-	float T_final = 0.5;
-	float B = 0.0;
-	float J = 1;
-	float J2 = -1;
+	float T_final = 5;
+	float B = 1;
+	float J = 0;
+	float J2 = 0;
 	float delta_T = -0.1; 
-	int iteraciones = 2000000;
-    int iteraciones_termalizacion = 1000000;
-    int corona = 1;
+	int iteraciones = 200000;
+    int iteraciones_termalizacion = 0;
+    int corona = 0;
 	
     //Abrimos archivos de corrida
-   	FILE *f = fopen("../corridas/segundos_vecinos/energia.txt", "w");
+   	FILE *f = fopen("../corridas/termalizacion/energia.txt", "w");
     fprintf(f, "iteracion,T,energia,n\n");
-   	FILE *f2 = fopen("../corridas/segundos_vecinos/magnetizacion.txt", "w");    
+   	FILE *f2 = fopen("../corridas/termalizacion/magnetizacion.txt", "w");    
     fprintf(f2, "iteracion,T,magnetizacion,n\n");
 
     //Declaramos las variables que vamos a usar
@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
     //Semilla aleatoria
     srand(123456);
     
-	for(i=1;i < 2;i++){ //Solo veo 64x64
+	for(i=3 ;i < 4;i++){ //Solo veo 64x64
 		
 		//Vamos variando el tamaño de red
 		int n = ns[i];
@@ -101,7 +101,7 @@ int main(int argc, char **argv) {
 			for(iteracion = 0; iteracion < iteraciones; iteracion++){
 				energia = metropolis(lattice, n, energias, energia, J, J2, B, &magnetizacion, corona);	
 				//if((energia_anterior != energia || magnetizacion_anterior != magnetizacion) && iteracion%10000 == 0){
-				if(iteracion%5000 == 0){			
+				if(iteracion%1 == 0){			
 					fprintf(f, "%d,%f,%f,%d\n", iteracion, T, (float)energia/(n*n), n);
 					fprintf(f2, "%d,%f,%f,%d\n", iteracion, T, (float)magnetizacion/(n*n), n);                    
 					energia_anterior = energia;
