@@ -78,14 +78,11 @@ spanish]{revtex4-1}
              %  but any date may be explicitly specified
 
 \begin{abstract}
-A partir de simulaciones numéricas con redes finitas fue posible reconstruir el comportamiento de las propiedades de una red de nodos bidimensional. Ésta red percola siguiendo una transición de fase de $2^\circ$ orden y sus propiedades son gobernadas por leyes de potencias y exponentes críticos. Se observó un cambio de fase para $p$ cercano al $p_c$ tabulado y fue posible además obtener valores de los exponentes críticos en coincidencia con los teóricos. Finalmente, se estudió el proceso de renormalización basado en la universalidad de las leyes de potencias en redes de tamaño finito en un entorno de la transición.\\
-
-En el presente trabajo analizamos la magnetización y la energía de una red cuadrada de espines en función
-de la temperatura, empleando una simulación númerica del modelo de Ising (Montecarlo). Para ello se utilizó el
-algoritmo de Metrópolis, y se consideraron condiciones de contorno periódicas. Se estudió la transición de fase del
-sistema, comportándose como ferromagnético (paramagnético) para temperaturas menores (mayores) a $T_c$ $\approx$ 2,26.
+Se estudió el comportamiento de una red 2D de spines utilizando el modelo de Ising y por medio de simulaciones Metrópolis-Montecarlo. Se obtuvo la magnetización, la energía media, el calor específico 
+y la susceptibilidad magnética para redes de $L=32$, $L=64$, $L=128$, $L=256$ para un hamiltoniano con interacciones ferromagnéticas a primeros vecinos. Se halló una transición de fase para 
+una temperatura crítica $T_c\approx2,36$ en buena concordancia con el valor teórico de $T_c\approx2,27$.
+Se estudió además el fenómeno de frustración magnética utilizando un hamiltoniano con interacciones antiferromagneticas a segundos vecinos.
 \end{abstract}
-
 
 \maketitle
 
@@ -129,7 +126,7 @@ En el modelo de Ising 2D la temperatura crítica $T_c$ para $B=0$ y $J'=0$ puede
 T_c = \frac{J}{k_B}\frac{2}{ln(2+\sqrt{2})},
 \label{T_c}
 \end{equation}
-con $k_B$ la constante de Boltzmann. Tomando $\frac{J}{k_B}=1$ se obtiene $T_c\approx2.27$ adimensional.
+con $k_B$ la constante de Boltzmann. Tomando $\frac{J}{k_B}=1$ se obtiene $T_c\approx2.27$ adimensional. A lo largo de éste trabajo se utilizará $J^*=\frac{J}{k_BT}$, una $J$ reducida adimensional.
 
 \section{Programa de simulación del modelo de Ising}
 El valor de expectación de un observable $A$ está dado por:
@@ -255,7 +252,8 @@ Para una red de $L=128$, comenzando desde $T=5$ hasta $T=0.5$ y disminuyendo la 
 \end{minipage}
 
 Se observa una distribución bimodal de la magnetización, lo que implica la existencia de una simetría en la magnetización espontanea, dado que resulta indistinto para el sistema que los spines se polaricen hacia arriba o hacia abajo.\\
-Para poder romper ésta simetría, se agregó una corona alrededor de la red con spines fijos apuntando hacia arriba. Para redes de tamaño infinito, la corona tiene medida nula y por lo tanto no modifican los valores medios calculados. Sin embargo, alcanza para romper la simetría del sistema y lograr que la magnetización quede distribuida alrededor de uno solo de los mínimos.
+Para poder romper ésta simetría, se agregó una corona alrededor de la red con spines fijos apuntando hacia arriba. Para redes de tamaño infinito, la corona tiene medida nula y por lo tanto no modifica 
+los valores medios calculados. Sin embargo, alcanza para romper la simetría del sistema y lograr que la magnetización quede distribuida alrededor de uno solo de los mínimos.
 Se realizó el mismo cálculo anterior para redes de $L=32$, $L=64$, $L=128$ y $L=256$, obteniéndose los valores observados en la figura \ref{fig:magnetizacion_con_corona}
 
 \begin{minipage}{0.45\textwidth}									
@@ -300,7 +298,8 @@ específico del sistema. En la figura \ref{grafico_capacidad_calorifica} se graf
 \label{grafico_capacidad_calorifica}
 \end{minipage}
 
-Para encontrar la temperatura $T_c$, se ajustó por medio de un polinomio de grado 20 el calor específico para la red de L = 64. Luego se buscó el pico obteniéndose un máximo en $T_c\approx2.36$, en buena concordancia con el calculado en \ref{T_c}, lo que muestra que para una red 64x64 nos encontramos prácticamente en el límite termodinámico. 
+Para encontrar la temperatura $T_c$, se ajustó por medio de un polinomio de grado 20 el calor específico para la red de L = 64. Luego se buscó el pico obteniéndose un máximo en $T_c\approx2.36$, en 
+buena concordancia con el calculado en \ref{T_c}. 
 En la figura \ref{capacidad_calorifica_con_ajuste_polinomial} se observa un gráfico del calor específico para la red de L = 64 y el polinomio de ajuste.
 
 \begin{minipage}{0.45\textwidth}									
@@ -311,20 +310,40 @@ En la figura \ref{capacidad_calorifica_con_ajuste_polinomial} se observa un grá
 \end{minipage}
 
 \subsection{Hamiltoniano con segundos vecinos y fenómeno de frustración}
+El fenómeno de frustración es una característica de los sistemas magnéticos que lleva a estructuras complejas. Éste fenómeno se produce por un conflicto en la interacción entre spines en la red, en 
+donde la alineación de un spin con sus primeros vecinos reduce la energía de interacción entre ellos, pero la aumenta con sus segundos vecinos. Por ejemplo, en la red 2D, tomando un spin y suponiendo 
+que todos sus primeros vecinos apuntan hacia arriba y sus segundos vecinos apuntan hacia abajo, con acoplamientos ferromagneticos para sus primeros vecinos y anti para sus segundos, el spin es 
+frustrado porque cualquiera de sus dos orientaciones dan la misma energía. El spin no puede minimizar en simultaneo la energía con todos sus vecinos.\\
+Tomando en el hamiltoniano de \ref{hamiltoniano} $J=1$, $B=0$ y $J'=-1$ se obtiene un hamiltoniano con interacciones ferromagnéticas a primeros vecinos y antiferromagneticas a segundos vecinos, 
+para estudiar el fenómeno de frustración en el modelo de Ising.\\ 
+En la figura \ref{fig:frustracion} se graficó la magnetización media en función de la temperatura para una red de $L=64$. Se observa que no existe magnetización espontanea en el rango de temperaturas 
+estudiado.
 
+\begin{minipage}{0.45\textwidth}									
+\centering
+\includegraphics[totalheight=0.25\textheight]{imagenes/frustracion/magnetizacion}
+\captionof{figure}{Magnetización por partícula en función de la temperatura para una red de L = 64 a segundos vecinos.}
+\label{fig:frustracion}
+\end{minipage}
+
+Ésto es consistente con la frustración magnética, producto de la incapacidad de minimizar la energía a primeros y segundos vecinos en simultaneo para las interacciones elegidas. 
 
 \section{Conclusiones}
+Se estudió el comportamiento de una red 2D de spines utilizando el modelo de Ising y por medio de simulaciones Metrópolis-Montecarlo. Se obtuvo la magnetización, la energía media, el calor específico 
+y la susceptibilidad magnética para redes de $L=32$, $L=64$, $L=128$, $L=256$ para un hamiltoniano con interacciones ferromagnéticas a primeros vecinos. Se encontró un salto en la magnetización 
+espontanea y una divergencia en el calor específico para una temperatura crítica $T_c$, señal de una transición de fase. Se halló que la transición de fase ocurre para temperaturas de 
+$T_c\approx2,36$ al ajustar por un polinomio el máximo del calor específico para una red de 64x64 spines, en concordancia con el valor teórico de $T_c\approx2,27$. La diferencia en las temperaturas 
+obtenidas puede ser atribuida a efectos de tamaño finito en las redes utilizadas.\\
+Se estudió además el fenómeno de frustración magnética utilizando un hamiltoniano con interacciones antiferromagneticas a segundos vecinos, obteniendose efectivamente una anulación de la 
+magnetización espontanea en el rango de temperaturas estudiado.
 
-Se estudió el comportamiento de la magnetización,
-la energía media, el calor específico y la susceptibilidad
-magnética de una red cuadrada de espines en función
-la temperatura. Mediante la simulación Montecarlo,
-empleando el algoritmo de Metrópolis, se halló que una
-transición de fase de ferromagnético a paramagnético
-ocurre en $T_c\approx2,26$ al ajustar por un polinomio el máximo del calor específico para una red de 64x64 spines, cuando el valor teórico en el límite termodinámico
-era de 2,369 aproximadamente. También se analizaron los
-efectos de tamaño finito, analizando distintos tamaños
-de la red.
+\begin{acknowledgments}
+A. Rabinovich es becario doctoral del CONICET. 
+\end{acknowledgments}
+
+\appendix
+\bibliography{ising}% Produces the bibliography via BibTeX.
+
 \end{document}
 
 

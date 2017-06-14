@@ -134,3 +134,23 @@ ggplot(data=noisy.y, aes(x=T, y=energia)) +
   labs(x="T", y="Cv por particula") +
   theme_original()
 
+#FRUSTRACION
+datos                 <-data.frame(read_csv("corridas/antiferro/magnetizacion.txt"))
+magnetizacion_media   <- aggregate(formula = magnetizacion ~ T+n, data = datos, FUN=mean)
+magnetizacion_media$n <- as.factor(magnetizacion_media$n)
+ggplot(data=magnetizacion_media, aes(x=T, y=magnetizacion)) + 
+  geom_point(aes(color=n)) + 
+  labs(title="Magnetización (J=1, B=0, J'=-1)") +
+  labs(x="T", y="Magnetización media por particula") +
+  ylim(-0.1, 0.1) +
+  theme_original()
+
+datos                 <-data.frame(read_csv("corridas/antiferro/magnetizacion.txt"))
+magnetizacion_media   <- aggregate(formula = magnetizacion ~ T+n, data = datos, FUN=mean)
+magnetizacion_media$n <- as.factor(magnetizacion_media$n)
+ggplot(data=magnetizacion_media, aes(x=T, y=magnetizacion)) + 
+  geom_point(aes(color=n)) + 
+  labs(title="Magnetización (J=1, B=0, J'=-1)") +
+  labs(x="T", y="Magnetización media por particula") +
+  ylim(-0.1, 0.1) +
+  theme_original()
